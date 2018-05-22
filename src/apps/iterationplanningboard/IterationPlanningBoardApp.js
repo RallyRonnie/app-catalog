@@ -56,6 +56,7 @@
                 modelNames: this.modelNames,
                 timeboxType: 'Iteration',
                 plugins: plugins,
+                numColumns: 6,
                 cardBoardConfig: {
                     cardConfig: {
                         fields:  this.getCardFieldNames()
