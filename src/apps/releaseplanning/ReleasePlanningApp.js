@@ -1,7 +1,7 @@
 (function() {
     var Ext = window.Ext4 || window.Ext;
 
-    Ext.define('Rally.apps.releaseplanning.ReleasePlanningApp', {
+    Ext.define('Rally.apps.PIplanning.PIPlanningApp', {
         extend: 'Rally.app.App',
         requires: [
             'Rally.data.util.PortfolioItemHelper',
@@ -26,6 +26,7 @@
         },
 
         _buildGridBoard: function () {
+            app = this;
             var context = this.getContext();
 
             this.gridboard = this.add({
@@ -33,14 +34,22 @@
                 cardBoardConfig: {
                     columnConfig: {
                         columnStatusConfig: {
-                            pointField: 'PreliminaryEstimateValue'
+                            pointField: this.getSetting('pointField')
                         },
                         fields: this._getDefaultFields()
+                    },
+                    storeConfig: {
+                        filters: this.getQueryFilter()
                     },
                     listeners: {
                         filter: this._onBoardFilter,
                         filtercomplete: this._onBoardFilterComplete,
                         scope: this
+                    },
+                    rowConfig: {
+                        field: this.getSetting('Swimlane'),
+                        sortDirection: 'ASC',
+                        enableCrossRowDragging: false
                     }
                 },
                 context: context,
@@ -231,6 +240,81 @@
                 this.gridboard.destroy();
             }
             this._buildGridBoard();
-        }
+        },
+        getSettingsFields: function () {
+            var values = [
+                {
+                    xtype: 'label',
+                    forId: 'myFieldId1',
+                    text: 'Estimate Field:',
+                    margin: '0 0 0 0'
+                },
+                {
+                    xtype: 'rallyradiofield',
+                    fieldLabel: 'Preliminary Estimate',
+                    margin: '0 0 0 20',
+                    name: 'pointField',
+                    inputValue: 'PreliminaryEstimateValue'
+                },
+                {
+                    xtype: 'rallyradiofield',
+                    fieldLabel: 'Refined Estimate',
+                    margin: '0 0 0 20',
+                    name: 'pointField',
+                    inputValue: 'RefinedEstimate'
+                },
+                {
+                    xtype: 'rallyradiofield',
+                    fieldLabel: 'Story Plan Estimate',
+                    margin: '0 0 15 20',
+                    name: 'pointField',
+                    inputValue: 'LeafStoryPlanEstimateTotal'
+                },
+                {
+                    xtype: 'label',
+                    forId: 'myFieldId2',
+                    text: 'Swimlanes:',
+                    margin: '0 0 0 0'
+                },
+                {
+                    xtype: 'rallyradiofield',
+                    margin: '0 0 0 20',
+                    fieldLabel: 'None',
+                    name: 'Swimlane',
+                    inputValue: ''
+                },                {
+                    xtype: 'rallyradiofield',
+                    fieldLabel: 'Parent',
+                    margin: '0 0 0 20',
+                    name: 'Swimlane',
+                    inputValue: 'Parent'
+                },
+                {
+                    xtype: 'rallyradiofield',
+                    fieldLabel: 'Team',
+                    margin: '0 0 15 20',
+                    name: 'Swimlane',
+                    inputValue: 'Project'
+                },
+                {
+                    type: 'query'
+                }
+            ];
+            return values;
+        },
+        config: {
+            defaultSettings: {
+                Swimlane: '',
+                pointField: 'PreliminaryEstimateValue',
+                query: ''
+            }
+        },
+        getQueryFilter: function () {
+            var queries = [];
+            if (app.getSetting('query')) {
+                queries.push(Rally.data.QueryFilter.fromQueryString(app.getSetting('query')));
+            }
+            return queries;
+        }    
     });
 })();
