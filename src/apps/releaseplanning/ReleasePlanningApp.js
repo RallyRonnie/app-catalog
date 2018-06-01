@@ -31,6 +31,7 @@
 
             this.gridboard = this.add({
                 xtype: 'rallytimeboxgridboard',
+                numColumns: this.getSetting('numColumns'),
                 cardBoardConfig: {
                     columnConfig: {
                         columnStatusConfig: {
@@ -79,7 +80,6 @@
                     'LeafStoryCount',
                     'LeafStoryPlanEstimateTotal',
                     'LastUpdateDate',
-                    'State',
                     'UnEstimatedLeafStoryCount'
                 ];
 
@@ -244,6 +244,12 @@
         getSettingsFields: function () {
             var values = [
                 {
+                    name: 'numColumns',
+                    xtype: 'rallynumberfield',
+                    label: 'Columns:',
+                    margin: '0 0 0 0'
+                },
+                {
                     xtype: 'label',
                     forId: 'myFieldId1',
                     text: 'Estimate Field:',
@@ -292,9 +298,16 @@
                 {
                     xtype: 'rallyradiofield',
                     fieldLabel: 'Team',
-                    margin: '0 0 15 20',
+                    margin: '0 0 0 20',
                     name: 'Swimlane',
                     inputValue: 'Project'
+                },
+                {
+                    xtype: 'rallyradiofield',
+                    fieldLabel: 'State',
+                    margin: '0 0 15 20',
+                    name: 'Swimlane',
+                    inputValue: 'State'
                 },
                 {
                     type: 'query'
@@ -305,6 +318,7 @@
         config: {
             defaultSettings: {
                 Swimlane: '',
+                numColumns: 4,
                 pointField: 'PreliminaryEstimateValue',
                 query: ''
             }
