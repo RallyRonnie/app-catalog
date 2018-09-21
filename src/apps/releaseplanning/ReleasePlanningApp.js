@@ -266,13 +266,6 @@
                 },
                 {
                     xtype: 'rallyradiofield',
-                    fieldLabel: 'Refined Estimate',
-                    margin: '0 0 0 20',
-                    name: 'pointField',
-                    inputValue: 'RefinedEstimate'
-                },
-                {
-                    xtype: 'rallyradiofield',
                     fieldLabel: 'Story Plan Estimate',
                     margin: '0 0 15 20',
                     name: 'pointField',
