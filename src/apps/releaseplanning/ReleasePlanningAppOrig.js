@@ -1,16 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>PI Planning Board</title>
-
-    <script type="text/javascript" src="/apps/2.1/sdk.js"></script>
-
-    <script type="text/javascript">
-        Rally.onReady(function () {
-                (function() {
+(function() {
     var Ext = window.Ext4 || window.Ext;
 
-    Ext.define('Rally.apps.PIplanning.PIPlanningApp', {
+    Ext.define('Rally.apps.releaseplanning.ReleasePlanningApp', {
         extend: 'Rally.app.App',
         requires: [
             'Rally.data.util.PortfolioItemHelper',
@@ -35,31 +26,21 @@
         },
 
         _buildGridBoard: function () {
-            app = this;
             var context = this.getContext();
 
             this.gridboard = this.add({
                 xtype: 'rallytimeboxgridboard',
-                numColumns: this.getSetting('numColumns'),
                 cardBoardConfig: {
                     columnConfig: {
                         columnStatusConfig: {
-                            pointField: this.getSetting('pointField')
+                            pointField: 'RefinedEstimate'
                         },
                         fields: this._getDefaultFields()
-                    },
-                    storeConfig: {
-                        filters: this.getQueryFilter()
                     },
                     listeners: {
                         filter: this._onBoardFilter,
                         filtercomplete: this._onBoardFilterComplete,
                         scope: this
-                    },
-                    rowConfig: {
-                        field: this.getSetting('Swimlane'),
-                        sortDirection: 'ASC',
-                        enableCrossRowDragging: false
                     }
                 },
                 context: context,
@@ -89,6 +70,7 @@
                     'LeafStoryCount',
                     'LeafStoryPlanEstimateTotal',
                     'LastUpdateDate',
+                    'State',
                     'UnEstimatedLeafStoryCount'
                 ];
 
@@ -108,9 +90,8 @@
                     headerPosition: 'left'
                 }
             ];
-//            if (context.isFeatureEnabled('F8943_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_MANY_PAGES')) {
-            if (true)   {
-               plugins.push(this._getSharedViewPluginConfig());
+            if (context.isFeatureEnabled('F8943_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_MANY_PAGES')) {
+                plugins.push(this._getSharedViewPluginConfig());
             }
             return plugins;
 
@@ -121,8 +102,7 @@
             var blackListFields = ['PortfolioItemType', 'Release', 'ModelType'];
             var whiteListFields = ['Milestones', 'Tags'];
 
-//            if (context.isFeatureEnabled('F8943_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_MANY_PAGES')) {
-             if (true)   {
+            if (context.isFeatureEnabled('F8943_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_MANY_PAGES')) {
                 return {
                     ptype: 'rallygridboardinlinefiltercontrol',
                     inlineFilterButtonConfig: {
@@ -239,7 +219,7 @@
         },
 
         _getDefaultFields: function() {
-            return ['Discussion', 'PreliminaryEstimate', 'UserStories', 'Milestones'];
+            return ['Discussion', 'PreliminaryEstimate', 'RefinedEstimate', 'UserStories', 'Milestones'];
         },
 
         _getModelNames: function() {
@@ -251,110 +231,6 @@
                 this.gridboard.destroy();
             }
             this._buildGridBoard();
-        },
-        getSettingsFields: function () {
-            var values = [
-                {
-                    name: 'numColumns',
-                    xtype: 'rallynumberfield',
-                    label: 'Columns:',
-                    margin: '0 0 0 0'
-                },
-                {
-                    xtype: 'label',
-                    forId: 'myFieldId1',
-                    text: 'Estimate Field:',
-                    margin: '0 0 0 0'
-                },
-                {
-                    xtype: 'rallyradiofield',
-                    fieldLabel: 'Preliminary Estimate',
-                    margin: '0 0 0 20',
-                    name: 'pointField',
-                    inputValue: 'PreliminaryEstimateValue'
-                },
-                {
-                    xtype: 'rallyradiofield',
-                    fieldLabel: 'Refined Estimate',
-                    margin: '0 0 0 20',
-                    name: 'pointField',
-                    inputValue: 'RefinedEstimate'
-                },
-                {
-                    xtype: 'rallyradiofield',
-                    fieldLabel: 'Story Plan Estimate',
-                    margin: '0 0 15 20',
-                    name: 'pointField',
-                    inputValue: 'LeafStoryPlanEstimateTotal'
-                },
-                {
-                    xtype: 'label',
-                    forId: 'myFieldId2',
-                    text: 'Swimlanes:',
-                    margin: '0 0 0 0'
-                },
-                {
-                    xtype: 'rallyradiofield',
-                    margin: '0 0 0 20',
-                    fieldLabel: 'None',
-                    name: 'Swimlane',
-                    inputValue: ''
-                },                {
-                    xtype: 'rallyradiofield',
-                    fieldLabel: 'Parent',
-                    margin: '0 0 0 20',
-                    name: 'Swimlane',
-                    inputValue: 'Parent'
-                },
-                {
-                    xtype: 'rallyradiofield',
-                    fieldLabel: 'Team',
-                    margin: '0 0 0 20',
-                    name: 'Swimlane',
-                    inputValue: 'Project'
-                },
-                {
-                    xtype: 'rallyradiofield',
-                    fieldLabel: 'State',
-                    margin: '0 0 15 20',
-                    name: 'Swimlane',
-                    inputValue: 'State'
-                },
-                {
-                    type: 'query'
-                }
-            ];
-            return values;
-        },
-        config: {
-            defaultSettings: {
-                Swimlane: '',
-                numColumns: 4,
-                pointField: 'PreliminaryEstimateValue',
-                query: ''
-            }
-        },
-        getQueryFilter: function () {
-            var queries = [];
-            if (app.getSetting('query')) {
-                queries.push(Rally.data.QueryFilter.fromQueryString(app.getSetting('query')));
-            }
-            return queries;
-        }    
+        }
     });
 })();
-
-
-            Rally.launchApp('Rally.apps.PIplanning.PIPlanningApp', {
-                name:"PI Planning Board",
-	            parentRepos:""
-            });
-
-        });
-    </script>
-
-
-</head>
-<body>
-</body>
-</html>

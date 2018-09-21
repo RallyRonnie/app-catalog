@@ -99,8 +99,9 @@
                     headerPosition: 'left'
                 }
             ];
-            if (context.isFeatureEnabled('F8943_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_MANY_PAGES')) {
-                plugins.push(this._getSharedViewPluginConfig());
+//            if (context.isFeatureEnabled('F8943_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_MANY_PAGES')) {
+            if (true)   {
+               plugins.push(this._getSharedViewPluginConfig());
             }
             return plugins;
 
@@ -111,7 +112,8 @@
             var blackListFields = ['PortfolioItemType', 'Release', 'ModelType'];
             var whiteListFields = ['Milestones', 'Tags'];
 
-            if (context.isFeatureEnabled('F8943_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_MANY_PAGES')) {
+//            if (context.isFeatureEnabled('F8943_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_MANY_PAGES')) {
+             if (true)   {
                 return {
                     ptype: 'rallygridboardinlinefiltercontrol',
                     inlineFilterButtonConfig: {
