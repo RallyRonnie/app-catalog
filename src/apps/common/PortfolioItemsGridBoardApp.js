@@ -30,10 +30,7 @@
 
         getAddNewConfig: function () {
             var config = {};
-            if (this.getContext().isFeatureEnabled('S105843_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_PORTFOLIO_ITEMS_AND_KANBAN')) {
-                config.margin = 0;
-            }
-
+            config.margin = 0;
             return _.merge(this.callParent(arguments), config);
         },
 
@@ -73,8 +70,6 @@
         getGridBoardCustomFilterControlConfig: function () {
             var context = this.getContext(),
                 skinnyFilter = !!context.isFeatureEnabled('F10466_INLINE_FILTER_UI_ENHANCEMENTS');
-
-            if (context.isFeatureEnabled('S105843_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_PORTFOLIO_ITEMS_AND_KANBAN')) {
                 return {
                     ptype: 'rallygridboardinlinefiltercontrol',
                     inline: skinnyFilter,
@@ -110,17 +105,9 @@
                         }
                     }
                 };
-            }
-
-            return {
-                blackListFields: ['PortfolioItemType'],
-                whiteListFields: ['Milestones']
-            };
         },
-
         getSharedViewConfig: function() {
             var context = this.getContext();
-            if (context.isFeatureEnabled('S105843_UPGRADE_TO_NEWEST_FILTERING_SHARED_VIEWS_ON_PORTFOLIO_ITEMS_AND_KANBAN')) {
                 return {
                     ptype: 'rallygridboardsharedviewcontrol',
                     sharedViewConfig: {
@@ -141,9 +128,7 @@
                         value: '"piTypePicker":"' + this.piTypePicker.getRecord().get('_refObjectUUID') + '"'
                     }]
                 };
-            }
-
-            return {};
+//            return {};
         },
 
         getFieldPickerConfig: function () {
@@ -296,6 +281,7 @@
                 }, this.getCardConfig()),
                 columnConfig: {
                     xtype: 'rallycardboardcolumn',
+                    enableCrossColumnRanking: this.getSetting('CrossColumnRanking'),
                     enableWipLimit: true,
                     fields: (this.getSetting('fields') || '').split(',')
                 },

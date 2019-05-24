@@ -29,7 +29,8 @@
 
         config: {
             defaultSettings: {
-                fields: 'Discussion,PercentDoneByStoryCount,UserStories,Milestones'
+                fields: 'Discussion,PercentDoneByStoryCount,UserStories,Milestones',
+                CrossColumnRanking: false,
             }
         },
 
@@ -51,7 +52,15 @@
         },
 
         getSettingsFields: function () {
-            return [{
+            return [
+                {
+                    xtype: 'rallycheckboxfield',
+					margin: '0 0 0 0',
+					labelWidth: 200,
+					fieldLabel: 'Enable Cross Column Ranking:',
+                    name: 'CrossColumnRanking',
+                },
+                {
                 name: 'groupHorizontallyByField',
                 xtype: 'rowsettingsfield',
                 fieldLabel: 'Swimlanes',
@@ -109,9 +118,27 @@
                     boxLabel: 'Show Policies',
                     margin: '2 5 5 5'
                 }
-            }]);
+            }],
+            [ { ptype: 'rallycardboardprinting' }],
+                [{
+                    ptype: 'rallygridboardactionsmenu', // rallygridboardactionsmenu
+                    menuItems: [{
+                            text: 'Print Board',
+                            handler: function () {
+// console.log(this.down('rallygridboard').getGridOrBoard());
+                                var gbObj = this.down('rallygridboard');
+//	console.log(this.down('rallygridboard').getGridOrBoard());
+                                gbObj.openPrintPage({title: 'Board Print'});
+                            },
+                            scope: this
+                        }
+                    ],
+                    buttonConfig: {
+                        iconCls: 'icon-print'
+                    }
+                }
+            ]);
         },
-
         getFilterControlConfig: function () {
             var config = this.callParent(arguments);
             return _.merge(config, {
